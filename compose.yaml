@@ -1,0 +1,41 @@
+services:
+  app:
+    image: buffet-man:local
+    build:
+      context: .
+    environment:
+      BUFFET_DB_URL: jdbc:mysql://db:3306/buffet
+      BUFFET_DB_USER: buffet
+      BUFFET_DB_PASSWORD: ${BUFFET_DB_PASSWORD:?Set BUFFET_DB_PASSWORD in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "0.0.0.0:${BUFFET_PORT:-8080}:8080"
+
+  db:
+    image: buffet-mysql:8.4
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    environment:
+      MYSQL_DATABASE: buffet
+      MYSQL_USER: buffet
+      MYSQL_PASSWORD: ${BUFFET_DB_PASSWORD:?Set BUFFET_DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >-
+          MYSQL_PWD="$$MYSQL_PASSWORD" mysql --protocol=TCP --host=127.0.0.1
+          --user="$$MYSQL_USER" --database="$$MYSQL_DATABASE"
+          --execute="SELECT 1 FROM goods LIMIT 0"
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  mysql-data:

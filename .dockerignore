@@ -1,0 +1,6 @@
+*
+!Dockerfile
+!Dockerfile.mysql
+!pom.xml
+!src/
+!src/**

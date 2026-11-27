@@ -11,14 +11,14 @@ public interface GoodsMapper {
 
     List<Goods> findByStockStatus(@Param("stockStatus") String stockStatus);
 
-    Goods findForUpdate(@Param("goodsId") String goodsId);
+    Goods findForUpdate(@Param("goodsId") Integer goodsId);
 
     void insert(Goods goods);
 
-    void update(@Param("goodsId") String goodsId, @Param("price") BigDecimal price,
+    void update(@Param("goodsId") Integer goodsId, @Param("price") BigDecimal price,
                 @Param("stockStatus") String stockStatus);
 
-    void updateStatus(@Param("goodsId") String goodsId, @Param("stockStatus") String stockStatus);
+    void updateStatus(@Param("goodsId") Integer goodsId, @Param("stockStatus") String stockStatus);
 
-    int delete(@Param("goodsId") String goodsId);
+    int delete(@Param("goodsId") Integer goodsId);
 }

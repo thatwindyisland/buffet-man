@@ -3,7 +3,7 @@
 <mapper namespace="org.example.buffet.mapper.GoodsMapper">
     <resultMap id="goods" type="org.example.buffet.entity.Goods">
         <constructor>
-            <idArg column="goods_id" javaType="java.lang.String"/>
+            <idArg column="goods_id" javaType="java.lang.Integer"/>
             <arg column="goods_name" javaType="java.lang.String"/>
             <arg column="price" javaType="java.math.BigDecimal"/>
             <arg column="stock_status" javaType="java.lang.String"/>

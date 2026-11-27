@@ -49,7 +49,7 @@ public class GoodsService {
     }
 
     @Transactional
-    public Goods update(String goodsId, BigDecimal price, String stockStatus) {
+    public Goods update(Integer goodsId, BigDecimal price, String stockStatus) {
         validateId(goodsId);
         validatePrice(price);
         validateStatus(stockStatus);
@@ -61,7 +61,7 @@ public class GoodsService {
     }
 
     @Transactional
-    public String updateStatus(String goodsId, String stockStatus) {
+    public String updateStatus(Integer goodsId, String stockStatus) {
         validateId(goodsId);
         validateStatus(stockStatus);
 
@@ -71,14 +71,14 @@ public class GoodsService {
     }
 
     @Transactional
-    public void delete(String goodsId) {
+    public void delete(Integer goodsId) {
         validateId(goodsId);
         if (goodsMapper.delete(goodsId) == 0) {
             throw new GoodsNotFoundException(goodsId);
         }
     }
 
-    private Goods requireGoodsForUpdate(String goodsId) {
+    private Goods requireGoodsForUpdate(Integer goodsId) {
         Goods goods = goodsMapper.findForUpdate(goodsId);
         if (goods == null) {
             throw new GoodsNotFoundException(goodsId);
@@ -86,10 +86,9 @@ public class GoodsService {
         return goods;
     }
 
-    private static void validateId(String goodsId) {
-        if (goodsId == null || goodsId.isBlank() || !goodsId.equals(goodsId.strip())
-                || goodsId.codePointCount(0, goodsId.length()) > 64) {
-            throw new IllegalArgumentException("商品编号须为 1 到 64 个字符，且首尾不能有空白");
+    private static void validateId(Integer goodsId) {
+        if (goodsId == null || goodsId < 1) {
+            throw new IllegalArgumentException("商品编号须为正整数");
         }
     }
 
@@ -107,7 +106,7 @@ public class GoodsService {
     }
 
     public static class GoodsNotFoundException extends RuntimeException {
-        public GoodsNotFoundException(String goodsId) {
+        public GoodsNotFoundException(Integer goodsId) {
             super("商品不存在：" + goodsId);
         }
     }

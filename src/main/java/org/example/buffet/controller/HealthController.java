@@ -13,13 +13,7 @@ public class HealthController {
     public Map<String,String> health(){
         return Map.of(
                 "status","OK",
-                "service_name","buffeimport org.springframework.web.bind.annotation.RestController;\n" +
-                        "import org.springframework.web.bind.annotation.GetMapping;\n" +
-                        "import org.springframework.web.bind.annotation.RequestParam;\n" +
-                        "\n" +
-                        "import java.io.Serializable;\n" +
-                        "import java.util.Map;\n" +
-                        "\nt_management"
+                "service_name","buffet_management"
         );
     }
 

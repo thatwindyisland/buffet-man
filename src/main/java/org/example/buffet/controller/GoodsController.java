@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -42,18 +43,18 @@ public class GoodsController {
     }
 
     @PutMapping("/{goodsId}")
-    public Goods update(@PathVariable("goodsId") String goodsId, @RequestBody GoodsUpdate request) {
+    public Goods update(@PathVariable("goodsId") Integer goodsId, @RequestBody GoodsUpdate request) {
         return goodsService.update(goodsId, request.price(), request.stockStatus());
     }
 
     @DeleteMapping("/{goodsId}")
-    public Map<String, Object> delete(@PathVariable("goodsId") String goodsId) {
+    public Map<String, Object> delete(@PathVariable("goodsId") Integer goodsId) {
         goodsService.delete(goodsId);
         return Map.of("goodsId", goodsId, "deleted", true);
     }
 
     @PutMapping("/status/{goodsId}")
-    public StockUpdate updateStatus(@PathVariable("goodsId") String goodsId, @RequestBody StockUpdate request) {
+    public StockUpdate updateStatus(@PathVariable("goodsId") Integer goodsId, @RequestBody StockUpdate request) {
         return new StockUpdate(goodsService.updateStatus(goodsId, request.stockStatus()));
     }
 
@@ -71,7 +72,13 @@ public class GoodsController {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> invalidJson() {
-        return Map.of("error", "请求体须为可解析的 JSON");
+        return Map.of("error", "请求体格式或字段类型无效");
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> invalidPathId() {
+        return Map.of("error", "商品编号须为正整数");
     }
 
     @ExceptionHandler(GoodsNotFoundException.class)
