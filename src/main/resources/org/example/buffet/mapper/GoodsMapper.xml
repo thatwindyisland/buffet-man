@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.buffet.mapper.GoodsMapper">
+    <resultMap id="goods" type="org.example.buffet.entity.Goods">
+        <constructor>
+            <idArg column="goods_id" javaType="java.lang.String"/>
+            <arg column="goods_name" javaType="java.lang.String"/>
+            <arg column="price" javaType="java.math.BigDecimal"/>
+            <arg column="stock_status" javaType="java.lang.String"/>
+            <arg column="stock_qty" javaType="java.lang.Integer"/>
+        </constructor>
+    </resultMap>
+
+    <sql id="columns">goods_id, goods_name, price, stock_status, stock_qty</sql>
+
+    <select id="findAll" resultMap="goods">
+        SELECT <include refid="columns"/> FROM goods ORDER BY goods_id
+    </select>
+
+    <select id="findByStockStatus" resultMap="goods">
+        SELECT <include refid="columns"/> FROM goods WHERE stock_status = #{stockStatus} ORDER BY goods_id
+    </select>
+
+    <select id="findForUpdate" resultMap="goods">
+        SELECT <include refid="columns"/> FROM goods WHERE goods_id = #{goodsId} FOR UPDATE
+    </select>
+
+    <insert id="insert">
+        INSERT INTO goods (<include refid="columns"/>)
+        VALUES (#{goodsId}, #{goodsName}, #{price}, #{stockStatus}, #{stockQty})
+    </insert>
+
+    <update id="update">
+        UPDATE goods SET price = #{price}, stock_status = #{stockStatus} WHERE goods_id = #{goodsId}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE goods SET stock_status = #{stockStatus} WHERE goods_id = #{goodsId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM goods WHERE goods_id = #{goodsId}
+    </delete>
+</mapper>
